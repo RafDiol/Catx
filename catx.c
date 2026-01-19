@@ -64,7 +64,16 @@ uint8_t read_Uint8InFlags(uint64_t flags, int index){
 }
 
 void show_help_message(){
-    printf("Catex - An extended CAT util\n");
+    printf("Catex - An extended CAT util\n\n");
+    printf("Usage: ./catx [OPTIONS] [FILES]\n\n");
+    printf("Options\n");
+    printf("   %-15s %-50s\n", "-h", "Shows this help message");
+    printf("   %-15s %-50s\n", "-s", "Squeeze blank lines");
+    printf("   %-15s %-50s\n", "-l", "Number all output lines");
+    printf("   %-15s %-50s\n", "-e", "Show end of line. Display $ at the end of each line");
+    printf("   %-15s %-50s\n", "-i", "Informative. Display spaces as . and TAB as >");
+    printf("   %-15s %-50s\n", "-p", "Paginated. Default lines per page.");
+    printf("   %-15s %-50s\n", "-P <lines>", "Paginated. Each page contains a set amount of lines");
 }
 
 int catextended(uint64_t flags, char* filepath){
@@ -150,6 +159,8 @@ int catextended(uint64_t flags, char* filepath){
         }
     }
 
+    fclose(handler);
+
     return 0;
 }
 
@@ -160,11 +171,12 @@ int main(int argc, char* argv[]){
     }
     else if(argc == 2 && (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)){
         show_help_message();
+        return 0;
     }
 
     int opt, err;
     uint64_t flags = 0;
-    while((opt = getopt(argc, argv, "slehpP:")) != -1){
+    while((opt = getopt(argc, argv, "sleipP:")) != -1){
         switch (opt)
         {
         case 's':
@@ -176,7 +188,7 @@ int main(int argc, char* argv[]){
         case 'e':
             flags |= SHOW_END_FLAG;
             break;
-        case 'h':
+        case 'i':
             flags |= HIGHLIGHT_FLAG;
             break;
         case 'p':
